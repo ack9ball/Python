@@ -6,21 +6,23 @@ class FTP(object):
 
     def __init__(self):
         self._connection = ftplib.FTP()
-        self._files = ""
-        self._filter = ""
         self._binary = True
 
     def set_transfer_mode(self, binary=True):
+        """Set the file transfer mode"""
         self._binary = binary
 
     def connect(self, ftp_server="", ftp_user="anonymous", ftp_password="nobody@nowhere.com"):
+        """Connect to the remote server"""
         self._connection.login(ftp_server, ftp_user, ftp_password)
 
     def remote_cd(self, remote_directory):
+        """Change the current working director on the remote server"""
         if remote_directory is str and len(remote_directory) > 0:
             self._connection.cwd(remote_directory)
 
     def local_cd(self, local_directory):
+        """Change the local working directory"""
         if local_directory is str and len(local_directory) > 0:
             chdir(local_directory)
 
@@ -38,7 +40,7 @@ class FTP(object):
         return files
 
     def get_file(self, remote_filename, local_filename=None):
-        # fetch a file
+        """Get a file from the remote server"""
         if local_filename is None:
             local_filename = path.basename(remote_filename)
 
@@ -59,6 +61,7 @@ class FTP(object):
             self._connection.storlines("STOR " + remote_filename, open(local_filename))
 
     def put_files(self, file_list=[]):
+        """Put a list of local files onto the remote server"""
         for file_name in file_list:
             if file_name is tuple:
                 remote_name = file_name[0]
@@ -71,6 +74,7 @@ class FTP(object):
                 self._connection.b(remote_name, file)
 
     def get_files(self, file_list=[]):
+        """Get a list of files from the remote server"""
         for file_name in file_list:
             if file_name is tuple:
                 remote_name = file_name[0]
